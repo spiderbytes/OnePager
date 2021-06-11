@@ -1,0 +1,52 @@
+﻿
+; Example-Code using jQuery Flip v1.1.1 (https://nnattawat.github.io/flip/)
+
+Enumeration
+  #Window
+  #ContainerGadget
+  #Image1
+  #ImageGadget1
+  #Image2
+  #ImageGadget2
+EndEnumeration
+
+Procedure LoadScriptCallback()
+  
+  OpenWindow(0, 0, 0, 300, 300, "", #PB_Window_ScreenCentered)
+  ContainerGadget(#ContainerGadget, 0, 0, 300, 300)
+    ImageGadget(#ImageGadget1, 50, 50, 200, 200, ImageID(#Image1))
+    ImageGadget(#ImageGadget2, 50, 50, 200, 200, ImageID(#Image2))
+  CloseGadgetList()
+  
+  GID = GadgetID(#ImageGadget1)
+  ! $(v_gid.div).addClass("front");
+  
+  GID = GadgetID(#ImageGadget2)
+  ! $(v_gid.div).addClass("back");
+  
+  GID = GadgetID(#ContainerGadget)
+  ! $(v_gid.div).flip(); // options: see https://nnattawat.github.io/flip/
+  
+EndProcedure
+
+Procedure Loaded(Type, Filename$, ObjectId)
+  
+  Static nbImages
+  
+  nbImages + 1
+  
+  If nbImages = 2
+    LoadScript("https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js", @LoadScriptCallback(), #PB_Script_JavaScript)
+  EndIf
+  
+EndProcedure
+
+Procedure LoadingError(Type, Filename$, ObjectId)
+  Debug Filename$ + ": loading error"
+EndProcedure
+
+BindEvent(#PB_Event_Loading, @Loaded())
+BindEvent(#PB_Event_LoadingError, @LoadingError())
+
+LoadImage(#Image1, "https://picsum.photos/200/200?random=1")
+LoadImage(#Image2, "https://picsum.photos/200/200?random=2")
